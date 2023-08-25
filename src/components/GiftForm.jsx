@@ -1,6 +1,9 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 
-function GiftForm() {
+function GiftForm({timeline, ease}) {
+
+    let div = useRef(null);
+    let right = useRef(null);
 
     const [show, setShow] = useState(true);   // to toggle on off .right div beased on screen
     const [data, setData] = useState({
@@ -13,10 +16,18 @@ function GiftForm() {
 
     useEffect(()=>{
 
+        timeline.from(div , 1, { opacity: 0})
+        .from( [".cirle1", ".cirle2"], 1.5, { opacity: 0})
+        
         const mobile  = window.innerWidth;
         if(mobile <= 600){
             setShow(false);
+        }else{
+           timeline.from(right, 1 , {opacity: 0, x: "200%",ease: ease,delay: -.8})
+           .from( [ ".cirle3",".cirle4", ".cirle5"], 1.5, { opacity: 0})
         }
+
+
     },[])
 
     const handleChange = (e)=>{             //to get all the data user enters 
@@ -48,13 +59,14 @@ function GiftForm() {
     
   return (
     <div className='giftpage'>
-        <div className="left">
+        <div className="left" ref={el => div = el}>
             
             <div className="cirle1"></div>
             <div className="cirle2"></div>
             <div className="cirle3"></div>
 
-            <form className='formStyle' onSubmit={handleSubmit} >
+            {/* <div className='form_outer' ref={el => div = el}> */}
+            <form className='formStyle' onSubmit={handleSubmit}   >
                 <h2 id='hH2'>AI CURATED GIFT IDEAS</h2>
                 <p>Our AI-powered tool will guide you in choosing the perfect gift when you're unsure about what to buy. Simply fill out the form below with information about the recipient and your budget, and we'll suggest a curated list of gifts!</p>
             <div>
@@ -80,11 +92,12 @@ function GiftForm() {
 
             <button id='giftbtn'>Get Gift Suggestions</button>
             </form>
+            {/* </div> */}
         </div>
 
         {show && (
         <div className="right">
-            <img src='./newgift2.png'/>  
+            <img src='./newgift2.png' ref={el => right = el}/>  
                 <div className="cirle4"></div>
                 <div className="cirle5"></div>
         </div>)}
